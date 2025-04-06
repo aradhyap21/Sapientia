@@ -95,6 +95,12 @@
   }
 }
 
+/* Add the custom font class for the site title */
+.sapientia-title {
+  font-family: 'Cinzel Decorative', cursive;
+  @apply font-bold tracking-wider;
+}
+
 .blog-content {
   @apply prose prose-slate max-w-none;
 }

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { SearchIcon, Home, Clock, User, Settings, Crown, LogOut, Menu, X } from "lucide-react";
@@ -38,7 +37,7 @@ export default function NavBar() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0 flex items-center">
-              <span className="text-xl font-bold text-primary">BlogHub</span>
+              <span className="text-xl font-cinzel text-primary">sapientia</span>
             </Link>
           </div>
 
