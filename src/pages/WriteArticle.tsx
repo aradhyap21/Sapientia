@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "@/components/NavBar";
@@ -145,207 +144,211 @@ export default function WriteArticle() {
     <SidebarProvider>
       <div className="min-h-screen flex flex-col bg-gray-50">
         <NavBar />
-        <div className="flex-1 container mx-auto max-w-4xl py-8 px-4">
-          <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-            <h1 className="text-3xl font-bold mb-6">Write New Article</h1>
-            
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-                <FormField
-                  control={form.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-lg font-semibold">Title</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="Enter article title" 
-                          className="text-xl py-3" 
-                          {...field} 
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-
-                {/* Cover Image Upload */}
-                <div className="space-y-2">
-                  <label className="text-lg font-semibold block">Cover Image</label>
-                  <div className="flex items-center space-x-4">
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      onClick={() => document.getElementById('image-upload')?.click()}
-                      className="flex items-center gap-2"
-                    >
-                      <ImageIcon className="h-4 w-4" />
-                      Upload Image
-                    </Button>
-                    <input
-                      type="file"
-                      id="image-upload"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handleImageUpload}
+        <div className="flex flex-1">
+          <main className="flex-1 p-6">
+            <div className="max-w-6xl mx-auto">
+              <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+                <h1 className="text-3xl font-bold mb-6">Write New Article</h1>
+                
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+                    <FormField
+                      control={form.control}
+                      name="title"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-lg font-semibold">Title</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="Enter article title" 
+                              className="text-xl py-3" 
+                              {...field} 
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
                     />
-                    {imagePreview && (
-                      <div className="relative w-16 h-16 overflow-hidden rounded">
-                        <img
-                          src={imagePreview}
-                          alt="Preview"
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    )}
-                  </div>
-                </div>
 
-                {/* Formatting Toolbar */}
-                <div className="border rounded-t-md bg-gray-50">
-                  <Menubar className="border-none bg-transparent py-2 px-4">
-                    <MenubarMenu>
-                      <MenubarTrigger className="cursor-pointer">
-                        <Bold className="h-4 w-4" onClick={() => applyFormatting("bold")} />
-                      </MenubarTrigger>
-                    </MenubarMenu>
-                    <MenubarMenu>
-                      <MenubarTrigger className="cursor-pointer">
-                        <Italic className="h-4 w-4" onClick={() => applyFormatting("italic")} />
-                      </MenubarTrigger>
-                    </MenubarMenu>
-                    <MenubarMenu>
-                      <MenubarTrigger className="cursor-pointer">
-                        <Underline className="h-4 w-4" onClick={() => applyFormatting("underline")} />
-                      </MenubarTrigger>
-                    </MenubarMenu>
-                    <MenubarSeparator />
-                    <MenubarMenu>
-                      <MenubarTrigger className="cursor-pointer">
-                        <Heading1 className="h-4 w-4" onClick={() => applyFormatting("h1")} />
-                      </MenubarTrigger>
-                    </MenubarMenu>
-                    <MenubarMenu>
-                      <MenubarTrigger className="cursor-pointer">
-                        <Heading2 className="h-4 w-4" onClick={() => applyFormatting("h2")} />
-                      </MenubarTrigger>
-                    </MenubarMenu>
-                    <MenubarSeparator />
-                    <MenubarMenu>
-                      <MenubarTrigger className="cursor-pointer">
-                        <List className="h-4 w-4" onClick={() => applyFormatting("ul")} />
-                      </MenubarTrigger>
-                    </MenubarMenu>
-                    <MenubarMenu>
-                      <MenubarTrigger className="cursor-pointer">
-                        <ListOrdered className="h-4 w-4" onClick={() => applyFormatting("ol")} />
-                      </MenubarTrigger>
-                    </MenubarMenu>
-                    <MenubarMenu>
-                      <MenubarTrigger className="cursor-pointer">
-                        <Quote className="h-4 w-4" onClick={() => applyFormatting("quote")} />
-                      </MenubarTrigger>
-                    </MenubarMenu>
-                    <MenubarSeparator />
-                    <MenubarMenu>
-                      <MenubarTrigger className="cursor-pointer">
-                        <AlignLeft className="h-4 w-4" />
-                      </MenubarTrigger>
-                      <MenubarContent>
-                        <MenubarItem onClick={() => applyFormatting("left")}>
-                          <AlignLeft className="mr-2 h-4 w-4" />
-                          <span>Left</span>
-                        </MenubarItem>
-                        <MenubarItem onClick={() => applyFormatting("center")}>
-                          <AlignCenter className="mr-2 h-4 w-4" />
-                          <span>Center</span>
-                        </MenubarItem>
-                        <MenubarItem onClick={() => applyFormatting("right")}>
-                          <AlignRight className="mr-2 h-4 w-4" />
-                          <span>Right</span>
-                        </MenubarItem>
-                      </MenubarContent>
-                    </MenubarMenu>
-                    <MenubarMenu>
-                      <MenubarTrigger className="cursor-pointer">
-                        <PaintBucket className="h-4 w-4" />
-                      </MenubarTrigger>
-                      <MenubarContent>
-                        <MenubarItem onClick={() => applyFormatting("color-red")}>
-                          <div className="h-4 w-4 mr-2 rounded-full bg-red-500" />
-                          <span>Red</span>
-                        </MenubarItem>
-                        <MenubarItem onClick={() => applyFormatting("color-blue")}>
-                          <div className="h-4 w-4 mr-2 rounded-full bg-blue-500" />
-                          <span>Blue</span>
-                        </MenubarItem>
-                        <MenubarItem onClick={() => applyFormatting("color-green")}>
-                          <div className="h-4 w-4 mr-2 rounded-full bg-green-500" />
-                          <span>Green</span>
-                        </MenubarItem>
-                      </MenubarContent>
-                    </MenubarMenu>
-                  </Menubar>
-                </div>
-
-                {/* Editor */}
-                <Textarea
-                  id="editor"
-                  placeholder="Write your article content here..."
-                  className="min-h-[300px] font-mono rounded-t-none resize-y"
-                  value={editorState}
-                  onChange={(e) => setEditorState(e.target.value)}
-                />
-
-                {/* Scheduling */}
-                <div className="space-y-2">
-                  <label className="text-lg font-semibold block">Schedule Publication</label>
-                  <div className="flex">
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            "justify-start text-left font-normal w-[240px]",
-                            !selectedDate && "text-muted-foreground"
-                          )}
+                    {/* Cover Image Upload */}
+                    <div className="space-y-2">
+                      <label className="text-lg font-semibold block">Cover Image</label>
+                      <div className="flex items-center space-x-4">
+                        <Button 
+                          type="button" 
+                          variant="outline" 
+                          onClick={() => document.getElementById('image-upload')?.click()}
+                          className="flex items-center gap-2"
                         >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {selectedDate ? format(selectedDate, "PPP") : "Pick a date"}
+                          <ImageIcon className="h-4 w-4" />
+                          Upload Image
                         </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={selectedDate}
-                          onSelect={setSelectedDate}
-                          initialFocus
+                        <input
+                          type="file"
+                          id="image-upload"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={handleImageUpload}
                         />
-                      </PopoverContent>
-                    </Popover>
-                    {selectedDate && (
-                      <Button 
-                        type="button" 
-                        variant="ghost" 
-                        className="ml-2" 
-                        onClick={() => setSelectedDate(undefined)}
-                      >
-                        Clear
-                      </Button>
-                    )}
-                  </div>
-                </div>
+                        {imagePreview && (
+                          <div className="relative w-16 h-16 overflow-hidden rounded">
+                            <img
+                              src={imagePreview}
+                              alt="Preview"
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </div>
 
-                <div className="flex justify-end space-x-2 pt-4">
-                  <Button type="button" variant="outline" onClick={() => navigate("/")}>
-                    Cancel
-                  </Button>
-                  <Button type="submit">
-                    {selectedDate ? "Schedule Post" : "Publish Now"}
-                  </Button>
-                </div>
-              </form>
-            </Form>
-          </div>
+                    {/* Formatting Toolbar */}
+                    <div className="border rounded-t-md bg-gray-50">
+                      <Menubar className="border-none bg-transparent py-2 px-4">
+                        <MenubarMenu>
+                          <MenubarTrigger className="cursor-pointer">
+                            <Bold className="h-4 w-4" onClick={() => applyFormatting("bold")} />
+                          </MenubarTrigger>
+                        </MenubarMenu>
+                        <MenubarMenu>
+                          <MenubarTrigger className="cursor-pointer">
+                            <Italic className="h-4 w-4" onClick={() => applyFormatting("italic")} />
+                          </MenubarTrigger>
+                        </MenubarMenu>
+                        <MenubarMenu>
+                          <MenubarTrigger className="cursor-pointer">
+                            <Underline className="h-4 w-4" onClick={() => applyFormatting("underline")} />
+                          </MenubarTrigger>
+                        </MenubarMenu>
+                        <MenubarSeparator />
+                        <MenubarMenu>
+                          <MenubarTrigger className="cursor-pointer">
+                            <Heading1 className="h-4 w-4" onClick={() => applyFormatting("h1")} />
+                          </MenubarTrigger>
+                        </MenubarMenu>
+                        <MenubarMenu>
+                          <MenubarTrigger className="cursor-pointer">
+                            <Heading2 className="h-4 w-4" onClick={() => applyFormatting("h2")} />
+                          </MenubarTrigger>
+                        </MenubarMenu>
+                        <MenubarSeparator />
+                        <MenubarMenu>
+                          <MenubarTrigger className="cursor-pointer">
+                            <List className="h-4 w-4" onClick={() => applyFormatting("ul")} />
+                          </MenubarTrigger>
+                        </MenubarMenu>
+                        <MenubarMenu>
+                          <MenubarTrigger className="cursor-pointer">
+                            <ListOrdered className="h-4 w-4" onClick={() => applyFormatting("ol")} />
+                          </MenubarTrigger>
+                        </MenubarMenu>
+                        <MenubarMenu>
+                          <MenubarTrigger className="cursor-pointer">
+                            <Quote className="h-4 w-4" onClick={() => applyFormatting("quote")} />
+                          </MenubarTrigger>
+                        </MenubarMenu>
+                        <MenubarSeparator />
+                        <MenubarMenu>
+                          <MenubarTrigger className="cursor-pointer">
+                            <AlignLeft className="h-4 w-4" />
+                          </MenubarTrigger>
+                          <MenubarContent>
+                            <MenubarItem onClick={() => applyFormatting("left")}>
+                              <AlignLeft className="mr-2 h-4 w-4" />
+                              <span>Left</span>
+                            </MenubarItem>
+                            <MenubarItem onClick={() => applyFormatting("center")}>
+                              <AlignCenter className="mr-2 h-4 w-4" />
+                              <span>Center</span>
+                            </MenubarItem>
+                            <MenubarItem onClick={() => applyFormatting("right")}>
+                              <AlignRight className="mr-2 h-4 w-4" />
+                              <span>Right</span>
+                            </MenubarItem>
+                          </MenubarContent>
+                        </MenubarMenu>
+                        <MenubarMenu>
+                          <MenubarTrigger className="cursor-pointer">
+                            <PaintBucket className="h-4 w-4" />
+                          </MenubarTrigger>
+                          <MenubarContent>
+                            <MenubarItem onClick={() => applyFormatting("color-red")}>
+                              <div className="h-4 w-4 mr-2 rounded-full bg-red-500" />
+                              <span>Red</span>
+                            </MenubarItem>
+                            <MenubarItem onClick={() => applyFormatting("color-blue")}>
+                              <div className="h-4 w-4 mr-2 rounded-full bg-blue-500" />
+                              <span>Blue</span>
+                            </MenubarItem>
+                            <MenubarItem onClick={() => applyFormatting("color-green")}>
+                              <div className="h-4 w-4 mr-2 rounded-full bg-green-500" />
+                              <span>Green</span>
+                            </MenubarItem>
+                          </MenubarContent>
+                        </MenubarMenu>
+                      </Menubar>
+                    </div>
+
+                    {/* Editor */}
+                    <Textarea
+                      id="editor"
+                      placeholder="Write your article content here..."
+                      className="min-h-[300px] font-mono rounded-t-none resize-y"
+                      value={editorState}
+                      onChange={(e) => setEditorState(e.target.value)}
+                    />
+
+                    {/* Scheduling */}
+                    <div className="space-y-2">
+                      <label className="text-lg font-semibold block">Schedule Publication</label>
+                      <div className="flex">
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className={cn(
+                                "justify-start text-left font-normal w-[240px]",
+                                !selectedDate && "text-muted-foreground"
+                              )}
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              {selectedDate ? format(selectedDate, "PPP") : "Pick a date"}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={selectedDate}
+                              onSelect={setSelectedDate}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                        {selectedDate && (
+                          <Button 
+                            type="button" 
+                            variant="ghost" 
+                            className="ml-2" 
+                            onClick={() => setSelectedDate(undefined)}
+                          >
+                            Clear
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end space-x-2 pt-4">
+                      <Button type="button" variant="outline" onClick={() => navigate("/")}>
+                        Cancel
+                      </Button>
+                      <Button type="submit">
+                        {selectedDate ? "Schedule Post" : "Publish Now"}
+                      </Button>
+                    </div>
+                  </form>
+                </Form>
+              </div>
+            </div>
+          </main>
         </div>
       </div>
     </SidebarProvider>

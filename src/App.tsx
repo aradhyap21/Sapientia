@@ -11,6 +11,7 @@ import Register from "./pages/Register";
 import BlogDetails from "./pages/BlogDetails";
 import NotFound from "./pages/NotFound";
 import WriteArticle from "./pages/WriteArticle";
+import MyBlogs from "./pages/MyBlogs";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/register" element={<Register />} />
             <Route path="/blog/:id" element={<BlogDetails />} />
             <Route path="/write" element={<WriteArticle />} />
+            <Route path="/my-blogs" element={<MyBlogs />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

@@ -11,7 +11,7 @@ export default function Home() {
         <NavBar />
         <div className="flex flex-1">
           <Sidebar />
-          <main className="flex-1 p-6">
+          <main className="flex-1 p-6 bg-background">
             <BlogList />
           </main>
         </div>

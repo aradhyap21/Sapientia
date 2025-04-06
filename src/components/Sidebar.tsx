@@ -10,7 +10,7 @@ export default function Sidebar() {
   const savedBlogs = blogs.filter(blog => blog.saved);
   
   return (
-    <aside className="w-64 hidden md:block bg-sidebar border-r p-5 min-h-[calc(100vh-4rem)]">
+    <aside className="w-64 hidden md:block bg-gray-50 border-r border-gray-200 p-5 min-h-[calc(100vh-4rem)]">
       <div className="space-y-6">
         {isAuthenticated && (
           <>
@@ -53,9 +53,14 @@ export default function Sidebar() {
                   <span>My Blogs</span>
                 </div>
               </h3>
-              <Link to="/write">
-                <Button className="w-full" size="sm">Write a new blog</Button>
-              </Link>
+              <div className="space-y-2">
+                <Link to="/my-blogs">
+                  <Button variant="outline" size="sm" className="w-full">View my blogs</Button>
+                </Link>
+                <Link to="/write">
+                  <Button className="w-full" size="sm">Write a new blog</Button>
+                </Link>
+              </div>
             </div>
           </>
         )}
