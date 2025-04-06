@@ -1,0 +1,18 @@
+
+import NavBar from "@/components/NavBar";
+import Sidebar from "@/components/Sidebar";
+import BlogList from "@/components/BlogList";
+
+export default function Home() {
+  return (
+    <div className="min-h-screen flex flex-col">
+      <NavBar />
+      <div className="flex flex-1">
+        <Sidebar />
+        <main className="flex-1 p-6">
+          <BlogList />
+        </main>
+      </div>
+    </div>
+  );
+}
