@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "@/components/NavBar";
@@ -142,12 +143,12 @@ export default function WriteArticle() {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex flex-col bg-gray-50">
+      <div className="min-h-screen flex flex-col bg-background">
         <NavBar />
-        <div className="flex flex-1">
-          <main className="flex-1 p-6">
-            <div className="max-w-6xl mx-auto">
-              <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div className="flex flex-1 w-full">
+          <main className="flex-1 p-4 md:p-6 w-full">
+            <div className="max-w-full mx-auto">
+              <div className="bg-card rounded-lg shadow-md p-4 md:p-6 mb-8">
                 <h1 className="text-3xl font-bold mb-6">Write New Article</h1>
                 
                 <Form {...form}>
@@ -202,7 +203,7 @@ export default function WriteArticle() {
                     </div>
 
                     {/* Formatting Toolbar */}
-                    <div className="border rounded-t-md bg-gray-50">
+                    <div className="border rounded-t-md bg-muted/30">
                       <Menubar className="border-none bg-transparent py-2 px-4">
                         <MenubarMenu>
                           <MenubarTrigger className="cursor-pointer">
@@ -292,7 +293,7 @@ export default function WriteArticle() {
                     <Textarea
                       id="editor"
                       placeholder="Write your article content here..."
-                      className="min-h-[300px] font-mono rounded-t-none resize-y"
+                      className="min-h-[350px] font-mono rounded-t-none resize-y w-full"
                       value={editorState}
                       onChange={(e) => setEditorState(e.target.value)}
                     />
@@ -354,3 +355,4 @@ export default function WriteArticle() {
     </SidebarProvider>
   );
 }
+

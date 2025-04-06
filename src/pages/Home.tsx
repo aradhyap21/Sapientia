@@ -9,9 +9,9 @@ export default function Home() {
     <SidebarProvider>
       <div className="min-h-screen flex flex-col">
         <NavBar />
-        <div className="flex flex-1">
+        <div className="flex flex-1 w-full">
           <Sidebar />
-          <main className="flex-1 p-6 bg-background">
+          <main className="flex-1 p-4 md:p-6 bg-background w-full">
             <BlogList />
           </main>
         </div>
