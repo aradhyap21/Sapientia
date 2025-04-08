@@ -44,11 +44,11 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link to="/" className="text-2xl font-bold text-primary">BlogHub</Link>
+          <Link to="/" className="text-2xl font-bold text-primary">Sapientia</Link>
           <p className="text-gray-500 mt-1">Share your thoughts with the world</p>
         </div>
         
-        <Card>
+        <Card>  
           <CardHeader>
             <CardTitle>Sign In</CardTitle>
             <CardDescription>Enter your credentials to access your account</CardDescription>

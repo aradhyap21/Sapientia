@@ -54,7 +54,7 @@ export default function Register() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link to="/" className="text-2xl font-bold text-primary">BlogHub</Link>
+          <Link to="/" className="text-2xl font-bold text-primary">Sapientia</Link>
           <p className="text-gray-500 mt-1">Join our community of writers and readers</p>
         </div>
         

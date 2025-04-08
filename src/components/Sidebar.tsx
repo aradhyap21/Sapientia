@@ -73,7 +73,7 @@ export default function Sidebar() {
             </div>
           </h3>
           <p className="text-sm text-gray-600">
-            BlogHub is a community platform for writers and readers to connect through meaningful content.
+            Sapientia is a community platform for writers and readers to connect through meaningful content.
           </p>
           <Link to="/about">
             <Button variant="link" size="sm" className="mt-1 p-0">
