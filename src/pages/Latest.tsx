@@ -1,5 +1,5 @@
 // Core imports
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 // UI components
@@ -9,9 +9,19 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Icons
-import { Calendar, Heart, MessageSquare, Clock, Bookmark } from "lucide-react";
+import { Calendar, Heart, MessageSquare, Clock, Bookmark, Search, Filter, Loader2 } from "lucide-react";
 
 // Hooks and utilities
 import { useAuth } from "@/context/AuthContext";
@@ -30,6 +40,7 @@ interface Post {
   readTime: string;
   likes: number;
   comments: number;
+  topics: string[];
 }
 
 // Mock data - in a real app, this would come from an API
@@ -43,7 +54,8 @@ const latestContent: Post[] = [
     imageUrl: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400&q=80",
     readTime: "8 min read",
     likes: 87,
-    comments: 14
+    comments: 14,
+    topics: ["Technology", "Quantum Physics", "Computer Science"]
   },
   {
     id: 2,
@@ -54,7 +66,8 @@ const latestContent: Post[] = [
     imageUrl: "https://www.noaa.gov/sites/default/files/styles/landscape_width_1275/public/2022-03/PHOTO-Climate-Collage-Diagonal-Design-NOAA-Communications-NO-NOAA-Logo.jpg",
     readTime: "12 min read",
     likes: 65,
-    comments: 8
+    comments: 8,
+    topics: ["Environment", "Climate", "Policy"]
   },
   {
     id: 3,
@@ -65,7 +78,8 @@ const latestContent: Post[] = [
     imageUrl: "https://images.unsplash.com/photo-1589254065878-42c9da997008?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400&q=80",
     readTime: "10 min read",
     likes: 92,
-    comments: 17
+    comments: 17,
+    topics: ["Technology", "AI", "Machine Learning"]
   },
   {
     id: 4,
@@ -76,7 +90,8 @@ const latestContent: Post[] = [
     imageUrl: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400&q=80",
     readTime: "7 min read",
     likes: 73,
-    comments: 11
+    comments: 11,
+    topics: ["Environment", "Energy", "Sustainability"]
   },
   {
     id: 5,
@@ -87,7 +102,8 @@ const latestContent: Post[] = [
     imageUrl: "https://images.unsplash.com/photo-1605106702734-205df224ecce?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400&q=80",
     readTime: "9 min read",
     likes: 58,
-    comments: 9
+    comments: 9,
+    topics: ["Health", "Psychology", "Wellness"]
   },
   {
     id: 6,
@@ -98,7 +114,8 @@ const latestContent: Post[] = [
     imageUrl: "https://images.unsplash.com/photo-1639762681057-408e52192e55?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400&q=80",
     readTime: "11 min read",
     likes: 81,
-    comments: 12
+    comments: 12,
+    topics: ["Technology", "Blockchain", "Finance"]
   }
 ];
 
@@ -150,6 +167,13 @@ const PostCard = ({ post, liked, onLike, bookmarked, onBookmark }: {
             <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
               {post.excerpt}
             </p>
+            <div className="flex flex-wrap gap-2 mb-3">
+              {post.topics.map((topic, index) => (
+                <Badge key={index} variant="secondary" className="px-2 py-0.5">
+                  {topic}
+                </Badge>
+              ))}
+            </div>
           </div>
           <div className="flex items-center justify-between mt-auto">
             <div className="flex items-center text-sm text-muted-foreground">
@@ -194,13 +218,105 @@ const PostCard = ({ post, liked, onLike, bookmarked, onBookmark }: {
   );
 };
 
+const PostCardSkeleton = () => (
+  <Card className="overflow-hidden border-0 shadow-sm">
+    <div className="flex flex-col md:flex-row">
+      <div className="md:w-1/3 h-48 md:h-auto">
+        <Skeleton className="w-full h-full" />
+      </div>
+      <div className="md:w-2/3 p-4 flex flex-col">
+        <Skeleton className="h-4 w-24 mb-3" />
+        <Skeleton className="h-7 w-3/4 mb-2" />
+        <Skeleton className="h-4 w-full mb-2" />
+        <Skeleton className="h-4 w-2/3 mb-4" />
+        <Skeleton className="h-6 w-32 mb-6" />
+        <div className="flex items-center justify-between mt-auto">
+          <Skeleton className="h-4 w-32" />
+          <div className="flex space-x-3">
+            <Skeleton className="h-6 w-12" />
+            <Skeleton className="h-6 w-12" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </Card>
+);
+
 export default function Latest() {
   const { isAuthenticated } = useAuth();
   const { toast } = useToast();
   const [likedPosts, setLikedPosts] = useState<Record<number, boolean>>({});
   const [bookmarkedPosts, setBookmarkedPosts] = useState<Record<number, boolean>>({});
-  const [posts, setPosts] = useState<Post[]>(latestContent);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortOption, setSortOption] = useState("latest");
+  const [activeCategory, setActiveCategory] = useState("all");
   const isMobile = useMediaQuery("(max-width: 768px)");
+
+  // Extract all unique topics from posts
+  const allTopics = Array.from(
+    new Set(latestContent.flatMap(post => post.topics))
+  );
+
+  // Simulate loading data
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      setPosts(latestContent);
+      setFilteredPosts(latestContent);
+      setIsLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Filter and sort posts when criteria change
+  useEffect(() => {
+    if (posts.length === 0) return;
+
+    let result = [...posts];
+
+    // Filter by search query
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(
+        post =>
+          post.title.toLowerCase().includes(query) ||
+          post.excerpt.toLowerCase().includes(query) ||
+          post.author.toLowerCase().includes(query) ||
+          post.topics.some(topic => topic.toLowerCase().includes(query))
+      );
+    }
+
+    // Filter by category
+    if (activeCategory !== "all") {
+      result = result.filter(post =>
+        post.topics.includes(activeCategory)
+      );
+    }
+
+    // Sort posts
+    switch (sortOption) {
+      case "latest":
+        result.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        break;
+      case "oldest":
+        result.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        break;
+      case "popular":
+        result.sort((a, b) => b.likes - a.likes);
+        break;
+      case "comments":
+        result.sort((a, b) => b.comments - a.comments);
+        break;
+      default:
+        break;
+    }
+
+    setFilteredPosts(result);
+  }, [posts, searchQuery, sortOption, activeCategory]);
 
   const handleLike = (postId: number) => {
     if (!isAuthenticated) {
@@ -260,19 +376,68 @@ export default function Latest() {
           <main className="flex-1 p-4 md:p-6 overflow-y-auto">
             <div className="max-w-7xl mx-auto space-y-6">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <h1 className="text-3xl font-bold">Latest Content</h1>
+                <h1 className="text-3xl font-bold">Trending Content</h1>
+                <div className="relative w-full md:w-auto">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search articles..."
+                    className="w-full md:w-[300px] pl-9"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
               </div>
               
-              {posts.length === 0 ? (
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <Tabs 
+                  defaultValue="all" 
+                  className="w-full sm:w-auto"
+                  onValueChange={setActiveCategory}
+                >
+                  <TabsList className="overflow-x-auto w-full sm:w-auto justify-start">
+                    <TabsTrigger value="all">All</TabsTrigger>
+                    {allTopics.slice(0, 5).map((topic, index) => (
+                      <TabsTrigger key={index} value={topic}>
+                        {topic}
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
+                </Tabs>
+                
+                <div className="flex items-center gap-2">
+                  <Select 
+                    defaultValue="latest" 
+                    onValueChange={setSortOption}
+                  >
+                    <SelectTrigger className="w-[160px]">
+                      <SelectValue placeholder="Sort by" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="latest">Latest</SelectItem>
+                      <SelectItem value="oldest">Oldest</SelectItem>
+                      <SelectItem value="popular">Most Popular</SelectItem>
+                      <SelectItem value="comments">Most Discussed</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              
+              {isLoading ? (
+                <div className="grid gap-6">
+                  {Array(3).fill(0).map((_, i) => (
+                    <PostCardSkeleton key={i} />
+                  ))}
+                </div>
+              ) : filteredPosts.length === 0 ? (
                 <div className="text-center py-12">
                   <h3 className="text-lg font-medium">No articles found</h3>
                   <p className="text-muted-foreground mt-2">
-                    Check back later for new content
+                    Try changing your search or filter criteria
                   </p>
                 </div>
               ) : (
                 <div className="grid gap-6">
-                  {posts.map((post) => (
+                  {filteredPosts.map((post) => (
                     <PostCard
                       key={post.id}
                       post={post}
@@ -285,10 +450,17 @@ export default function Latest() {
                 </div>
               )}
               
-              {posts.length > 0 && (
+              {filteredPosts.length > 0 && (
                 <div className="flex justify-center pt-4">
                   <Button variant="outline" className="w-full sm:w-auto">
-                    Load more articles
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Loading...
+                      </>
+                    ) : (
+                      "Load more articles"
+                    )}
                   </Button>
                 </div>
               )}

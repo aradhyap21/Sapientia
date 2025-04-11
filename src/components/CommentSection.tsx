@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -6,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/context/AuthContext";
 import { Blog, Comment, Reaction } from "@/types";
 import { cn } from "@/lib/utils";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast"; // Fix import path
 
 interface CommentSectionProps {
   blog: Blog;
@@ -17,7 +16,8 @@ const EMOJIS = ["👍", "❤️", "🎉", "👏", "🙌", "🤔", "🙏"];
 export default function CommentSection({ blog }: CommentSectionProps) {
   const { user, isAuthenticated } = useAuth();
   const { toast } = useToast();
-  const [comments, setComments] = useState<Comment[]>(blog.comments);
+  // Use optional chaining and provide default empty array
+  const [comments, setComments] = useState<Comment[]>(blog.comments || []);
   const [newComment, setNewComment] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState<string | null>(null);
 
