@@ -1,10 +1,9 @@
-
 import { useParams } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { blogs } from "@/lib/data";
 import { Bookmark } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import NavBar from "@/components/NavBar";
 import Sidebar from "@/components/Sidebar";
 import CommentSection from "@/components/CommentSection";
@@ -15,7 +14,16 @@ export default function BlogDetails() {
   const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
   const blog = blogs.find((blog) => blog.id === id);
-  const [isSaved, setIsSaved] = useState(blog?.saved || false);
+  const [isSaved, setIsSaved] = useState(false);
+  
+  // Update isSaved state when blog changes
+  useEffect(() => {
+    if (blog) {
+      // Check if this blog is saved in localStorage
+      const savedBlogs = JSON.parse(localStorage.getItem('savedBlogs') || '[]');
+      setIsSaved(savedBlogs.includes(blog.id));
+    }
+  }, [blog]);
 
   if (!blog) {
     return (
@@ -33,14 +41,26 @@ export default function BlogDetails() {
       </div>
     );
   }
-
+  
   const handleSave = () => {
-    setIsSaved(!isSaved);
+    const newSavedState = !isSaved;
+    setIsSaved(newSavedState);
+    
+    // Update localStorage
+    const savedBlogs = JSON.parse(localStorage.getItem('savedBlogs') || '[]');
+    if (newSavedState) {
+      savedBlogs.push(blog.id);
+    } else {
+      const index = savedBlogs.indexOf(blog.id);
+      if (index !== -1) savedBlogs.splice(index, 1);
+    }
+    localStorage.setItem('savedBlogs', JSON.stringify(savedBlogs));
+    
     toast({
-      title: isSaved ? "Article removed from saved" : "Article saved",
-      description: isSaved 
-        ? "The article has been removed from your saved items"
-        : "The article has been saved to your profile",
+      title: newSavedState ? "Article saved" : "Article removed from saved",
+      description: newSavedState
+        ? "The article has been saved to your profile"
+        : "The article has been removed from your saved items",
     });
   };
 
@@ -63,7 +83,13 @@ export default function BlogDetails() {
                   <div>
                     <p className="font-medium">{blog.author.name}</p>
                     <p className="text-sm text-gray-500">
-                      {blog.publishedAt} · {blog.readTime}
+                      {blog.publishedAt 
+                        ? new Intl.DateTimeFormat('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                          }).format(new Date(blog.publishedAt))
+                        : "No date"} · {blog.readTime || "? min read"}
                     </p>
                   </div>
                 </div>
