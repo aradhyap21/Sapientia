@@ -1,4 +1,4 @@
-# 🌟 Sapientia Backend - Sentiment Analysis 🧠
+# 🌟 Sapientia FrontEnd - Sentiment Analysis 🧠
 
 This repository contains the backend logic for *Sapientia*, an AI-powered sentiment analysis platform that processes and interprets textual data. Developed and trained using Kaggle notebooks, the model enables advanced NLP capabilities for understanding user sentiment.
 
@@ -20,8 +20,8 @@ Sapientia-Backend/
 
 ## 🧪 Tech Stack
 
-- 💻 *Python 3.10+*
-- 📘 *Pandas*
+- 💻 *Node.js/Express.js*
+- 📘 *React.js/Tailwind.css*
 - 🔤 *NLTK* / *spaCy*
 - 🧠 *Scikit-learn*
 - 🧪 *Jupyter Notebook / Kaggle Notebook*
